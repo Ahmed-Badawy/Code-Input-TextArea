@@ -20,8 +20,8 @@
 	<span class='fa fa-th-list btn selectAll' title='Select All Text'></span>
 	<span class='fa fa-trash btn emptyAll' title='Empty All Text'></span>
 
-	<a download="" style="display:none" class='hidden download_content_link'></a>
-	<span class='fa fa-download btn download_content' title='Download Content'></span>
+	<a href='' download="script.js" style="display:none" class='hidden download_content_link'></a>
+	<span class='fa fa-save btn download_content' title='Download Content'></span>
 
 	<span class='fa fa-hand-peace-o fa-lg pull-right'></span>
 	<span class='pull-right txtlength' style='color:#aaa;font-weight:bolder'></span>
@@ -40,7 +40,7 @@
 	<span class='fa fa-trash btn emptyAll' title='Empty All Text'></span>
 
 	<a href='' download="script.js" style="display:none" class='hidden download_content_link'></a>
-	<span class='fa fa-download btn download_content' title='Download Content'></span>
+	<span class='fa fa-save btn download_content' title='Download Content'></span>
 
 	<span class='fa fa-hand-peace-o fa-lg pull-right'></span>
 	<span class='pull-right txtlength' style='color:#aaa;font-weight:bolder'></span>
@@ -156,7 +156,8 @@ function apply_text_area(area_name,mime_type){
 	function count_chars(){
 		get(area_name,"txtlength").innerHTML = txtarea.value.length;		
 	}
-	count_chars();
+	function timeout() { setTimeout(function(){ count_chars(); timeout(); },3000); }
+    timeout(); count_chars();
 /********************************Create Textarea Download**************************************/	
 	var textFile = false;
 	function makeTextFile(text) {
