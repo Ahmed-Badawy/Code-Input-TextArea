@@ -2,63 +2,83 @@
 <html>
 <head>
 	<title>Advanced Code Textarea</title>
-	<link rel="stylesheet" href="http://ahmed-badawy.com/_assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="http://ahmed-badawy.com/_assets/plugins/font-awesome-4.5.0/css/font-awesome.min.css">
-    <script type="text/javascript" src='http://ahmed-badawy.com/_assets/plugins/clipboard.js/clipboard.min.js'></script>
+	<link rel="stylesheet" href="../../_assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../_assets/plugins/font-awesome-4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src='../../_assets/plugins/clipboard.js/clipboard.min.js'></script>
 </head>
 <body class='container'>
 
 <h1>Code TextArea <small>textarea with some advaced features like: (import external file, copy, cut, delete all, select all)</small></h1>
-<form action='#' enctype="multipart/form-data">
-	<textarea class='form-control' rows='8' ng-model='txts.mytxt1' id='mytxt1'></textarea>
-	<input type='file' id='upload_input' class='hidden'>
-	<span class='fa fa-file-code-o btn' id='file_btn' title='Import a File'></span>
-	<span class='fa fa-copy btn' id='copy_btn' title='Copy'></span>
-	<span class='fa fa-cut btn' id='cut_btn' title='Cut'></span>
-	<span class='fa fa-th-list btn' id='selectAll' title='Select All Text'></span>
-	<span class='fa fa-trash btn' id='emptyAll' title='Empty All Text'></span>
+
+<h3>TextArea 1</h3>
+<div id='textarea1'>
+	<textarea class='form-control mytextarea' rows='8'></textarea>
+	<input type='file' class='hidden upload_input' />
+	<span class='fa fa-file-code-o btn file_btn' title='Import a File'></span>
+	<span class='fa fa-copy btn copy_btn' title='Copy Text'></span>
+	<span class='fa fa-cut btn cut_btn' title='Cut Text'></span>
+	<span class='fa fa-th-list btn selectAll' title='Select All Text'></span>
+	<span class='fa fa-trash btn emptyAll' title='Empty All Text'></span>
+
+	<a download="" style="display:none" class='hidden download_content_link'></a>
+	<span class='fa fa-download btn download_content' title='Download Content'></span>
 
 	<span class='fa fa-hand-peace-o fa-lg pull-right'></span>
-	<span class='pull-right' id='txtlength_area' style='color:#aaa;font-weight:bolder'></span>
-</form>
+	<span class='pull-right txtlength' style='color:#aaa;font-weight:bolder'></span>
+</div>
+
+<br>
+
+<h3>TextArea 2</h3>
+<div id='textarea2'>
+	<textarea class='form-control mytextarea' rows='8'></textarea>
+	<input type='file' class='hidden upload_input' />
+	<span class='fa fa-file-code-o btn file_btn' title='Import a File'></span>
+	<span class='fa fa-copy btn copy_btn' title='Copy Text'></span>
+	<span class='fa fa-cut btn cut_btn' title='Cut Text'></span>
+	<span class='fa fa-th-list btn selectAll' title='Select All Text'></span>
+	<span class='fa fa-trash btn emptyAll' title='Empty All Text'></span>
+
+	<a href='' download="script.js" style="display:none" class='hidden download_content_link'></a>
+	<span class='fa fa-download btn download_content' title='Download Content'></span>
+
+	<span class='fa fa-hand-peace-o fa-lg pull-right'></span>
+	<span class='pull-right txtlength' style='color:#aaa;font-weight:bolder'></span>
+</div>
+
+
+
+<script type="text/javascript">
+
+
+/********************************Notify me**************************************/
+	function notifyUser(msgHeader,img,msg){
+		if(Notification.permission=='default'){
+			alert('please allow notification for our website...')
+		}else{
+			// alert("hi");
+			notify = new Notification(msgHeader,{
+				body: msg,
+				icon: (img) ? img : "1.jpg",
+				tag: Math.floor((Math.random() * 100) + 1)
+			});
+			notify.onclick = function(){
+				// console.log(this);
+				window.location = 'http://ahmed-badawy.com';
+			}
+		}
+	}
+/**********************************************************************/	
+
+function id(id){ return window.document.getElementById(id); }
+function get(id_name,class_name){ return window.document.getElementById(id_name).getElementsByClassName(class_name)[0]; }
 
 
 
 
-     <script type="text/javascript">
+function apply_text_area(area_name,mime_type){
+	var txtarea = get(area_name,'mytextarea');
 
-	    mytxt1 = window.document.getElementById('mytxt1');
-
-/********************************Copy TextArea Value**************************************/
-	var clipboard_copy = new Clipboard('#copy_btn', {
-        text: function() {
-        	count_chars();
-            return mytxt1.value;
-        }
-    });
-    clipboard_copy.on('success', function(e) { console.log(e); });
-    clipboard_copy.on('error', function(e) { console.log(e); });
-
-/********************************Cut TextArea Value**************************************/
-	var clipboard_cut = new Clipboard('#cut_btn', {
-        text: function() {
-            var return_text = mytxt1.value;
-            mytxt1.value = "";
-            count_chars();
-            return return_text;
-        }
-    });
-    clipboard_cut.on('success', function(e) { console.log(e); });
-    clipboard_cut.on('error', function(e) { console.log(e); });
-/********************************Select All TextArea Value**************************************/
-	document.getElementById('selectAll').addEventListener('click',(function(){
-		mytxt1.setSelectionRange(0,mytxt1.value.length);
-	}),false);
-/********************************Empty All**************************************/
-	document.getElementById('emptyAll').addEventListener('click',(function(){
-		mytxt1.value = "";
-		count_chars();
-	}),false);
 /*********************************Read Text File*************************************/	
 	function read_text_file(file){
 		if(file.type != "text/plain"){ //stop if it'sn't a text file
@@ -91,40 +111,71 @@
 		read_text_file(files[0]);
 	}
 	function handle_onread(file_text){
-		mytxt1.value = file_text;
+		txtarea.value = file_text;
 		count_chars();
-		notifyUser('File Imported','1.jpg');
+		notifyUser('File Imported');
 	}
-	document.getElementById("upload_input").addEventListener('change',read_file_actions,false);
-	document.getElementById("file_btn").addEventListener('click',function(){ document.getElementById("upload_input").click(); },false);
+	get(area_name,"upload_input").addEventListener('change',read_file_actions,false);
+	get(area_name,"file_btn").addEventListener('click',function(){ get(area_name,"upload_input").click(); },false);
+
+/********************************Copy TextArea Value**************************************/
+	var clipboard_copy = new Clipboard('#'+area_name+' .copy_btn', {
+        text: function() {
+			// notifyUser('Text Was Copied');
+        	count_chars();
+            return txtarea.value;
+        }
+    });
+    clipboard_copy.on('success', function(e) { console.log(e); });
+    clipboard_copy.on('error', function(e) { console.log(e); });
+
+/********************************Cut TextArea Value**************************************/
+	var clipboard_cut = new Clipboard('#'+area_name+' .cut_btn', {
+        text: function() {
+			// notifyUser('Text Was Cut');
+            var return_text = txtarea.value;
+            txtarea.value = "";
+            count_chars();
+            return return_text;
+        }
+    });
+    clipboard_cut.on('success', function(e) { console.log(e); });
+    clipboard_cut.on('error', function(e) { console.log(e); });
+/********************************Select All TextArea Value**************************************/
+	get(area_name,'selectAll').addEventListener('click',(function(){
+		txtarea.setSelectionRange(0,txtarea.value.length);
+	}),false);
+/********************************Empty All**************************************/
+	get(area_name,'emptyAll').addEventListener('click',(function(){
+		txtarea.value = "";
+		count_chars();
+		notifyUser('Empty All TextArea');
+	}),false);
 /********************************Count Number Of Chars**************************************/
-	mytxt1.addEventListener('keyup',function(){ count_chars()},false);
+	txtarea.addEventListener('keyup',function(){ count_chars() },false);
 	function count_chars(){
-		var txtlength = mytxt1.value.length;
-		document.getElementById("txtlength_area").innerHTML = txtlength;		
+		get(area_name,"txtlength").innerHTML = txtarea.value.length;		
 	}
 	count_chars();
+/********************************Create Textarea Download**************************************/	
+	var textFile = false;
+	function makeTextFile(text) {
+	    var data = new Blob([text], {type: mime_type});
+// If we are replacing a previously generated file we need to manually revoke the object URL to avoid memory leaks :
+	    if (textFile) window.URL.revokeObjectURL(textFile);
+	    textFile = window.URL.createObjectURL(data);
+	    return textFile;
+  	};
+	get(area_name,"download_content").addEventListener('click', function () {
+		get(area_name,"download_content_link").href = makeTextFile(txtarea.value);
+		get(area_name,"download_content_link").click();
+	},false);  	
 /**********************************************************************/
+}
 
+apply_text_area('textarea1','text/javascript');
+apply_text_area('textarea2','text/javascript');
 
-/********************************Notify me**************************************/
-	function notifyUser(msg,img){
-		if(Notification.permission=='default'){
-			alert('please allow notification for our website...')
-		}else{
-			// alert("hi");
-			notify = new Notification('New Message from Ahmed-Badawy.com',{
-				body: msg,
-				icon: img,
-				tag: Math.floor((Math.random() * 100) + 1)
-			});
-			notify.onclick = function(){
-				// console.log(this);
-				window.location = 'http://ahmed-badawy.com';
-			}
-		}
-	}
-/**********************************************************************/		
 
 
     </script>
